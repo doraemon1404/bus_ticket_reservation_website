@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="stylesheet" href="Seat.css">
+    <title>Bus Seat Booking</title>
+  </head>
+  <body>
+    <div class="bus-container">
+      <label> Select a bus:</label>
+      <select id="bus">
+        <option value="220">Royal Travels - <span>&#8377;</span> 220</option>
+        <option value="320">Rockstar Journey - <span>&#8377;</span> 320</option>
+        <option value="250">Deluxe Plus - <span>&#8377;</span> 250</option>
+        <option value="260">Wonder Travels - <span>&#8377;</span> 260</option>
+      </select>
+      <a href='home.html'><img src="home.png" alt="home" class="homeIcon"></a>
+    </div>    
+    <ul class="showcase">
+      <li>
+        <div class="seat"></div>
+        <small>Available</small>
+      </li>
+      <li>
+        <div class="seat selected"></div>
+        <small>Selected</small>
+      </li>
+      <li>
+        <div class="seat sold"></div>
+        <small>Sold</small>
+      </li>
+    </ul>
+    <div class="container">
+      <div class="row">
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="space"></div>
+        <div class="seat"></div>
+        <div class="seat"></div>
+      </div>
+      <div class="row">
+        <div class="seat"></div>
+        <div class="seat sold"></div>
+        <div class="space"></div>
+        <div class="seat"></div>
+        <div class="seat"></div>
+      </div>
+      <div class="row">
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="space"></div>
+        <div class="seat sold"></div>
+        <div class="seat sold"></div>
+      </div>
+      <div class="row">
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="space"></div>
+        <div class="seat"></div>
+        <div class="seat"></div>
+      </div>
+      <div class="row">
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="space"></div>
+        <div class="seat"></div>
+        <div class="seat sold"></div>
+      </div>
+      <div class="row">
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="space"></div>
+        <div class="seat sold"></div>
+        <div class="seat"></div>
+      </div>
+      <div class="row">
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="seat"></div>
+        <div class="seat sold"></div>
+        <div class="seat"></div>
+      </div>
+    </div>
+    <p class="text">
+      You have selected <span id="count">0</span> seat for a price of Rs.<span
+        id="total"
+        >0</span><button type="button" class="paymentBtn" onclick="paymentPage()">Proceed to Payment</button>
+    </p>  
+    <script>
+      const container = document.querySelector(".container");
+const seats = document.querySelectorAll(".row .seat:not(.sold)");
+const count = document.getElementById("count");
+const total = document.getElementById("total");
+const busSelect = document.getElementById("bus");
+
+populateUI();
+
+let ticketPrice = +busSelect.value;
+
+// Save selected movie index and price
+function setbusData(busIndex, busPrice) {
+  localStorage.setItem("selectedbusIndex", busIndex);
+  localStorage.setItem("selectedbusPrice", busPrice);
+}
+
+// Update total and count
+function updateSelectedCount() {
+  const selectedSeats = document.querySelectorAll(".row .seat.selected");
+
+  const seatsIndex = [...selectedSeats].map((seat) => [...seats].indexOf(seat));
+
+  localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
+
+  const selectedSeatsCount = selectedSeats.length;
+
+  count.innerText = selectedSeatsCount;
+  total.innerText = selectedSeatsCount * ticketPrice;
+
+  setbusData(busSelect.selectedIndex, busSelect.value);
+}
+
+
+// Get data from localstorage and populate UI
+function populateUI() {
+  const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
+
+  if (selectedSeats !== null && selectedSeats.length > 0) {
+    seats.forEach((seat, index) => {
+      if (selectedSeats.indexOf(index) > -1) {
+        console.log(seat.classList.add("selected"));
+      }
+    });
+  }
+
+  const selectedbusIndex = localStorage.getItem("selectedMovieIndex");
+
+  if (selectedbusIndex !== null) {
+    busSelect.selectedIndex = selectedbusIndex;
+    console.log(selectedbusIndex)
+  }
+}
+console.log(populateUI())
+// Movie select event
+busSelect.addEventListener("change", (e) => {
+  ticketPrice = +e.target.value;
+  setbusData(e.target.selectedIndex, e.target.value);
+  updateSelectedCount();
+});
+
+// Seat click event
+container.addEventListener("click", (e) => {
+  if (
+    e.target.classList.contains("seat") &&
+    !e.target.classList.contains("sold")
+  ) {
+    e.target.classList.toggle("selected");
+
+    updateSelectedCount();
+  }
+});
+
+// Initial count and total set
+updateSelectedCount();
+function paymentPage(){
+  window.location.href='Payment.html';
+}
+    </script>
+  </body>
+</html>
