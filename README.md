@@ -1,1 +1,1 @@
-# bus_ticket_reservation_website
+Welcome to our bus ticket booking website, a seamless integration of HTML, CSS, Bootstrap, and JavaScript.
